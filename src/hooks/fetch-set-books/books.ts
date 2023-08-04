@@ -41,7 +41,6 @@ const useBooks = ({noScroll = false}:{noScroll?: boolean}) => {
       window.addEventListener("scroll", handleScroll);
       return () => window.removeEventListener("scroll", handleScroll);
     }, [handleScroll]);
-    console.log(data);
  
     useEffect(() => {
         if (data) {
