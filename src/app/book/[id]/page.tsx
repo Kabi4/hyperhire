@@ -1,17 +1,20 @@
-'use client';
-import ImageWithFallback from '@src/components/ImageFallback';
-import Loader from '@src/components/Loader/Loader';
-import useBooks from '@src/hooks/fetch-set-books/books';
-import Image from 'next/image';
-import { useMemo } from 'react';
+"use client";
+import ImageWithFallback from "@src/components/ImageFallback";
+import Loader from "@src/components/Loader/Loader";
+import useBooks from "@src/hooks/fetch-set-books/books";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useCallback, useMemo } from "react";
 
 interface IProps {
   params: { id: string };
 }
 
 const BookDetails = ({ params }: IProps) => {
+  const router = useRouter();
+
   const { isLoading, books } = useBooks({
-    noScroll: true
+    noScroll: true,
   });
 
   const book = useMemo(
@@ -19,16 +22,22 @@ const BookDetails = ({ params }: IProps) => {
     [books, params.id]
   );
 
+  const goBack = useCallback(() => {
+    router.back();
+  }, []);
+
   return (
     <main>
       <header className="flex items-center py-3">
-        <Image
-          width={32}
-          height={32}
-          alt="nodp"
-          src="../assets/ARROW.svg"
-          priority
-        />
+        <div onClick={goBack}>
+          <Image
+            width={32}
+            height={32}
+            alt="nodp"
+            src="../assets/ARROW.svg"
+            priority
+          />
+        </div>
         <p className="flex-grow text-center text-lg font-bold sticky left-0 top-0">
           {decodeURIComponent(params.id)}
         </p>
@@ -39,10 +48,10 @@ const BookDetails = ({ params }: IProps) => {
       ) : (
         <div>
           <ImageWithFallback
-            src={book?.coverImage || ''}
+            src={book?.coverImage || ""}
             width="100%"
             height="auto"
-            alt={book?.title || ''}
+            alt={book?.title || ""}
           />
           <div className="p-2">
             <p className="text-lg font-bold">{book?.title}</p>
